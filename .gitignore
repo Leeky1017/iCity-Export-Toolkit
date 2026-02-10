@@ -1,0 +1,5 @@
+.icity_export_venv/
+__pycache__/
+*.pyc
+export/
+*_md/
