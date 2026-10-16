@@ -150,7 +150,7 @@ class AdditionalFailureTests(CliHarness):
 class ConsoleEncodingTests(unittest.TestCase):
     def test_redirected_windows_console_can_print_chinese_progress(self):
         output=io.BytesIO()
-        stream=io.TextIOWrapper(output,encoding='cp1252')
+        stream=io.TextIOWrapper(output,encoding='cp1252',newline='\n')
         with patch.object(m.os,'name','nt'),patch.object(m.sys,'stdout',stream):
             m.configure_console()
             print('第 1 页，累计 25 条',flush=True)
