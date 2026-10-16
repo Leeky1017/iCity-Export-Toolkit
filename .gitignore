@@ -3,3 +3,14 @@ __pycache__/
 *.pyc
 export/
 *_md/
+
+.worktrees/
+.icity_state/
+config.json
+cookies*.json
+session*.json
+diagnostics/
+
+*_raw_native*/
+*.report.json
+*.tmp
