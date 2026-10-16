@@ -146,3 +146,13 @@ class AdditionalFailureTests(CliHarness):
                 result,log=self.run_cli(d)
             self.assertEqual(result,1,log)
             self.assertEqual(json.loads((Path(d)/'backup.report.json').read_text(encoding='utf-8'))['status'],'failed')
+
+class ConsoleEncodingTests(unittest.TestCase):
+    def test_redirected_windows_console_can_print_chinese_progress(self):
+        output=io.BytesIO()
+        stream=io.TextIOWrapper(output,encoding='cp1252')
+        with patch.object(m.os,'name','nt'),patch.object(m.sys,'stdout',stream):
+            m.configure_console()
+            print('第 1 页，累计 25 条',flush=True)
+        self.assertEqual(output.getvalue().decode('utf-8'),'第 1 页，累计 25 条\n')
+        stream.detach()

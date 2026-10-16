@@ -136,9 +136,18 @@ def bootstrap_dependencies_and_rerun() -> None:
     subprocess.check_call(rerun_cmd, env=rerun_env)
 
 
+def configure_console() -> None:
+    """Windows redirects may use cp1252 even when the actual messages are Chinese."""
+    if os.name == "nt":
+        for stream in (sys.stdout, sys.stderr):
+            if hasattr(stream, "reconfigure") and not stream.isatty():
+                stream.reconfigure(encoding="utf-8", errors="backslashreplace")
+
+
 def ensure_runtime_dependencies() -> None:
     """确保 requests / bs4 / Crypto 可用；不可用时自动安装后重跑。"""
     global requests, BeautifulSoup
+    configure_console()
 
     if requests is not None and BeautifulSoup is not None:
         return
@@ -723,6 +732,7 @@ def fetch_web_post_count(username: str, password: str, target_user: str) -> Opti
 
 
 def main() -> int:
+    configure_console()
     parser = build_parser()
     args = parser.parse_args()
     ensure_runtime_dependencies()
